@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trắc Nghiệm Khuynh Hướng Tính Cách</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1a17;
+  --paper:#f3ede1;
+  --paper2:#ece3d3;
+  --line:#d8cdb8;
+  --accent:#c4502e;       /* terracotta-rust */
+  --accent2:#2f5d50;      /* deep pine */
+  --gold:#b8893b;
+  --ei:#d9a441;
+  --sn:#c4502e;
+  --tf:#2f5d50;
+  --jp:#7d5ba6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Be Vietnam Pro',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+
+/* ---------- INTRO ---------- */
+.hero{padding:72px 0 40px;text-align:left;position:relative}
+.eyebrow{
+  font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:20px
+}
+.hero h1{
+  font-family:'Fraunces',serif;font-weight:900;
+  font-size:clamp(2.6rem,7vw,4.4rem);line-height:.98;
+  letter-spacing:-.02em;margin-bottom:24px
+}
+.hero h1 em{font-style:italic;color:var(--accent);font-weight:500}
+.hero p{font-size:1.08rem;max-width:54ch;color:#4a443c}
+.meta{
+  display:flex;gap:28px;margin-top:34px;padding-top:24px;
+  border-top:1px solid var(--line);flex-wrap:wrap
+}
+.meta div{display:flex;flex-direction:column}
+.meta b{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:600;line-height:1}
+.meta span{font-size:.8rem;color:#736b5e;margin-top:4px;letter-spacing:.02em}
+.start-btn{
+  margin-top:38px;display:inline-flex;align-items:center;gap:12px;
+  background:var(--ink);color:var(--paper);border:none;
+  font-family:'Be Vietnam Pro';font-size:1rem;font-weight:600;
+  padding:16px 30px;border-radius:2px;cursor:pointer;
+  transition:transform .15s ease, background .15s ease;letter-spacing:.01em
+}
+.start-btn:hover{background:var(--accent);transform:translateY(-2px)}
+.start-btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* ---------- PROGRESS ---------- */
+.progress-bar{
+  position:sticky;top:0;z-index:50;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:14px 0;
+}
+.progress-inner{display:flex;align-items:center;gap:16px}
+.track{flex:1;height:6px;background:var(--paper2);border-radius:3px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--accent);transition:width .4s cubic-bezier(.4,0,.2,1)}
+.pcount{font-size:.85rem;font-weight:600;color:#736b5e;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ---------- QUESTIONS ---------- */
+#quiz{padding:30px 0 60px;display:none}
+.q{
+  padding:30px 0;border-bottom:1px solid var(--line);
+  opacity:0;transform:translateY(8px);animation:rise .5s forwards
+}
+@keyframes rise{to{opacity:1;transform:none}}
+.q-num{
+  font-family:'Fraunces',serif;font-size:.95rem;color:var(--accent);
+  font-weight:600;margin-bottom:6px
+}
+.q-title{font-size:1.18rem;font-weight:600;margin-bottom:22px;line-height:1.4}
+.scale{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center
+}
+.pole{font-size:.95rem;color:#4a443c;line-height:1.4}
+.pole.left{text-align:right}
+.pole.right{text-align:left}
+.dots{display:flex;gap:10px;justify-content:center}
+.dot{
+  width:34px;height:34px;border-radius:50%;border:2px solid var(--line);
+  background:transparent;cursor:pointer;position:relative;
+  transition:all .15s ease;display:grid;place-items:center;
+  font-size:.78rem;color:#a89e8c;font-weight:600
+}
+.dot:hover{border-color:var(--accent);transform:scale(1.1)}
+.dot:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.dot.sel{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.12)}
+.dot:nth-child(1),.dot:nth-child(5){width:38px;height:38px}
+@media(max-width:560px){
+  .scale{grid-template-columns:1fr;gap:12px;text-align:center}
+  .pole.left,.pole.right{text-align:center;font-weight:500}
+  .pole.left{order:1}.dots{order:2;margin:6px 0}.pole.right{order:3}
+  .dot{width:30px;height:30px}
+  .dot:nth-child(1),.dot:nth-child(5){width:32px;height:32px}
+}
+
+/* ---------- SUBMIT ---------- */
+.submit-zone{padding:40px 0 80px;text-align:center;display:none}
+.submit-zone.show{display:block}
+.warn{color:var(--accent);font-size:.92rem;margin-bottom:18px;min-height:1.2em}
+.submit-btn{
+  background:var(--accent);color:#fff;border:none;
+  font-family:'Be Vietnam Pro';font-size:1.05rem;font-weight:600;
+  padding:18px 44px;border-radius:2px;cursor:pointer;
+  transition:transform .15s ease,background .15s;letter-spacing:.01em
+}
+.submit-btn:hover{background:var(--ink);transform:translateY(-2px)}
+.submit-btn:disabled{background:var(--line);cursor:not-allowed;transform:none;color:#a89e8c}
+
+/* ---------- RESULT ---------- */
+#result{display:none;padding:60px 0 90px}
+.result-card{animation:rise .6s forwards}
+.r-eyebrow{font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);font-weight:600;text-align:center;margin-bottom:18px}
+.r-type{
+  font-family:'Fraunces',serif;font-weight:900;text-align:center;
+  font-size:clamp(4rem,18vw,8.5rem);line-height:.9;letter-spacing:.02em;
+  background:linear-gradient(135deg,var(--accent),var(--jp));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:8px
+}
+.r-name{font-family:'Fraunces',serif;font-style:italic;font-size:1.6rem;text-align:center;color:var(--ink);font-weight:500;margin-bottom:14px}
+.r-desc{text-align:center;max-width:52ch;margin:0 auto 44px;color:#4a443c;font-size:1.05rem}
+.dims{display:flex;flex-direction:column;gap:22px;margin-bottom:46px}
+.dim{}
+.dim-head{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:8px;font-weight:500}
+.dim-head .picked{font-weight:700}
+.dim-track{height:30px;background:var(--paper2);border-radius:2px;overflow:hidden;display:flex;position:relative}
+.dim-left,.dim-right{display:flex;align-items:center;height:100%;font-size:.82rem;font-weight:600;color:#fff;transition:width .9s cubic-bezier(.4,0,.2,1);white-space:nowrap;overflow:hidden}
+.dim-left{justify-content:flex-start;padding-left:10px}
+.dim-right{justify-content:flex-end;padding-right:10px;background:var(--paper2)!important;color:#8a8170}
+.r-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.btn-ghost{background:transparent;border:1.5px solid var(--ink);color:var(--ink);font-family:'Be Vietnam Pro';font-weight:600;padding:14px 28px;border-radius:2px;cursor:pointer;transition:all .15s;font-size:.95rem}
+.btn-ghost:hover{background:var(--ink);color:var(--paper)}
+.save-note{text-align:center;font-size:.85rem;color:#736b5e;margin-top:26px}
+.footer{text-align:center;padding:30px 0;font-size:.8rem;color:#a89e8c;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<!-- INTRO -->
+<section id="intro">
+  <div class="wrap hero">
+    <div class="eyebrow">Trắc nghiệm · 70 câu · ~10 phút</div>
+    <h1>Bạn nghiêng về <em>đâu</em> trên mỗi thang cảm nhận?</h1>
+    <p>Mỗi câu là một thang từ 1 đến 5 nối hai mệnh đề trái ngược. Không có lựa chọn đúng hay sai — chỉ có nơi bạn thật sự thuộc về. Cuối bài, bạn nhận ngay khuynh hướng tính cách của mình.</p>
+    <div class="meta">
+      <div><b>70</b><span>câu hỏi</span></div>
+      <div><b>4</b><span>cặp khuynh hướng</span></div>
+      <div><b>16</b><span>kiểu tính cách</span></div>
+    </div>
+    <button class="start-btn" onclick="startQuiz()">Bắt đầu trắc nghiệm →</button>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<div class="progress-bar" id="progressBar" style="display:none">
+  <div class="wrap progress-inner">
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <div class="pcount"><span id="done">0</span>/70</div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<section id="quiz"><div class="wrap" id="qlist"></div>
+  <div class="wrap submit-zone" id="submitZone">
+    <div class="warn" id="warn"></div>
+    <button class="submit-btn" id="submitBtn" onclick="finish()">Xem kết quả của tôi</button>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result"><div class="wrap result-card">
+  <div class="r-eyebrow">Khuynh hướng tính cách của bạn</div>
+  <div class="r-type" id="rType">····</div>
+  <div class="r-name" id="rName"></div>
+  <p class="r-desc" id="rDesc"></p>
+  <div class="dims" id="dims"></div>
+  <div class="r-actions">
+    <button class="btn-ghost" onclick="location.reload()">Làm lại</button>
+    <button class="btn-ghost" id="copyBtn" onclick="copyResult()">Sao chép kết quả</button>
+  </div>
+  <div class="save-note" id="saveNote"></div>
+</div>
+<div class="footer">Trắc nghiệm khuynh hướng tính cách · Dựa trên mô hình 4 cặp lưỡng cực</div>
+</section>
+<script>
+// ====== DỮ LIỆU 70 CÂU: [số, tiêu đề, mệnh đề a (trái), mệnh đề b (phải)] ======
+const QUESTIONS = [
+  [1,"Ở các bữa tiệc bạn thường","Nói chuyện với nhiều người, kể cả người lạ","Nói chuyện với số ít những người quen thân"],
+  [2,"Bạn thấy mình là người thuộc loại nào nhiều hơn?","Thực tế","Mơ mộng"],
+  [3,"Bạn quan tâm đến điều gì nhiều hơn?","Dữ liệu, thực tế","Các câu chuyện"],
+  [4,"Bạn thường đối xử như thế nào nhiều hơn?","Công bằng","Đối xử tốt, theo tình cảm"],
+  [5,"Bạn thường","Vô tư, không bao giờ thiên vị","Cảm thông, đôi khi xử lí tình huống theo cảm tính"],
+  [6,"Bạn thích làm việc theo kiểu nào nhiều hơn?","Theo đúng thời hạn","Theo hứng"],
+  [7,"Bạn sẽ lựa chọn","Rất cẩn thận","Phần nào theo cảm nhận"],
+  [8,"Tại các bữa tiệc, bạn thường","Ở lại muộn, cảm thấy ngày càng khỏe khoắn cao hứng hơn","Ra về sớm và cảm thấy mỏi mệt dần"],
+  [9,"Bạn là người","Nhạy cảm","Suy nghĩ cẩn trọng"],
+  [10,"Bạn thích","Dữ liệu, sự kiện thực tế","Các ý tưởng khác nhau"],
+  [11,"Về bản chất bạn thường","Công bằng với mọi người","Tốt với mọi người"],
+  [12,"Lần đầu tiên tiếp xúc bạn thường","Im lặng và cảm thấy xấu hổ","Nói nhiều và tỏ ra thân thiện"],
+  [13,"Thường thì bạn là người","Đúng giờ, chuẩn mực","Thong thả"],
+  [14,"Trường hợp nào bạn cảm thấy nóng ruột, bồn chồn hơn?","Khi mọi việc chưa hoàn thành","Khi mọi việc đã hoàn thành"],
+  [15,"Với những người bạn của mình, bạn thường","Biết điều gì đang xảy ra đối với mọi người","Biết những điều đó cuối cùng"],
+  [16,"Bạn thường quan tâm tới","Những chi tiết cụ thể","Ý tưởng, khái niệm"],
+  [17,"Bạn thích những tác giả","Nói thẳng điều định nói","Dùng nhiều câu chuyện để minh họa cho điều họ định nói"],
+  [18,"Về bản chất bạn thường","Vô tư, không thiên vị","Hay thương người"],
+  [19,"Khi đánh giá, bạn thường","Không để tình cảm cá nhân ảnh hưởng","Đa cảm, hay động lòng"],
+  [20,"Bạn thường","Sắp đặt công việc","Khuyến khích các phương án khác nhau"],
+  [21,"Bạn thường muốn","Các buổi hẹn có sắp đặt trước","Để mọi việc tự do, thoải mái"],
+  [22,"Khi gọi điện thoại bạn","Cứ gọi bình thường","Chuẩn bị trước những điều sẽ nói"],
+  [23,"Sự kiện thực tế","Tự nói lên mọi điều","Thường cần có lời giải thích"],
+  [24,"Bạn thích làm việc với","Những thông tin thực tế","Những ý tưởng trừu tượng"],
+  [25,"Bạn là người","Trầm tĩnh, lạnh lùng","Sôi nổi, sốt sắng"],
+  [26,"Bạn thường là người","Thực tế, vô tư hơn là thương xót, cảm thông","Thương xót cảm thông hơn là vô tư, thực tế"],
+  [27,"Bạn cảm thấy thoải mái hơn khi","Lập thời gian biểu rõ ràng","Cứ để mọi việc tự nhiên"],
+  [28,"Bạn cảm thấy thoải mái hơn với","Bản thỏa thuận viết lên giấy","Thỏa thuận bằng lời và những cái bắt tay"],
+  [29,"Ở nơi làm việc bạn thường","Là người bắt đầu các câu chuyện","Ngồi chờ người khác đến với mình"],
+  [30,"Những nguyên tắc truyền thống","Thường đáng tin cậy","Thường làm ta sai phương hướng"],
+  [31,"Trẻ em thường không","Hoạt động có ích hết khả năng chúng có","Mơ mộng như đáng có"],
+  [32,"Bạn có thường","Suy nghĩ luận giải chặt chẽ","Dễ xúc động"],
+  [33,"Bạn có thường","Chắc chắn, chặt chẽ hơn là mềm mỏng, dễ dãi","Mềm mỏng dễ dãi hơn là chắc chắn chặt chẽ"],
+  [34,"Bạn có sắp xếp mọi thứ","Trật tự ngăn nắp","Để chúng thoải mái, tự do"],
+  [35,"Bạn thấy điều gì có giá trị hơn","Điều chắc chắn, đã xác định","Điều chưa chắc chắn, còn thay đổi"],
+  [36,"Những mối quan hệ giao tiếp mới với người khác","Khuyến khích và thúc đẩy bạn","Làm bạn cảm thấy bạn cần tìm một chỗ khác để nghỉ và suy nghĩ"],
+  [37,"Bạn thường xuyên là người","Gắn với thực tế","Gắn với ý tưởng trừu tượng"],
+  [38,"Bạn bị cuốn hút vào việc gì nhiều hơn","Xem xét và hiểu các sự kiện","Phát triển ý tưởng mới"],
+  [39,"Điều gì làm bạn thỏa mãn hơn","Thảo luận mọi khía cạnh của một vấn đề","Tiến tới thỏa thuận về một vấn đề"],
+  [40,"Điều gì thúc đẩy bạn nhiều hơn","Trí óc của bạn","Trái tim của bạn"],
+  [41,"Bạn thấy thoải mái hơn với những công việc","Theo hợp đồng","Theo phong thái thoải mái tự nhiên"],
+  [42,"Bạn thích công việc được","Chuẩn xác và ngăn nắp","Mở cho nhiều giải thích khác nhau"],
+  [43,"Bạn thích","Nhiều bạn bè với những cuộc trao đổi ngắn","Một bạn mới với cuộc nói chuyện dài"],
+  [44,"Bạn bị cuốn hút bởi","Nhiều thông tin","Những giả thiết tuyệt vời"],
+  [45,"Bạn quan tâm nhiều hơn tới","Sản xuất","Nghiên cứu"],
+  [46,"Bạn cảm thấy thoải mái hơn khi bạn","Khách quan","Tính tới tình cảm cá nhân"],
+  [47,"Bạn tự đánh giá mình là người","Rõ ràng và chắc chắn","Sẵn sàng hy sinh"],
+  [48,"Bạn cảm thấy thoải mái hơn với","Lời phát ngôn cuối cùng","Những ý kiến kiến nghị, thảo luận"],
+  [49,"Bạn cảm thấy thoải mái hơn","Sau một quyết định","Trước một quyết định"],
+  [50,"Bạn có","Nói được nhiều chuyện, dễ dàng, với người lạ","Thấy chẳng có gì nhiều để nói với người lạ cả"],
+  [51,"Bạn có thường quan tâm tới","Dữ liệu, sự kiện của một tình huống cụ thể","Các tình huống chung"],
+  [52,"Bạn có cảm thấy mình là người","Chân chất hơn là khéo léo, hay","Khéo léo hơn là chân chất"],
+  [53,"Bạn thực sự là người của","Những luận giải rõ ràng","Cảm nhận tình cảm mạnh mẽ"],
+  [54,"Bạn có thiên hướng hơn về","Suy luận vô tư, công minh","Cảm thông"],
+  [55,"Điều hoàn hảo nói chung là","Đảm bảo rằng mọi việc đều được sắp xếp có quy củ","Cứ để mọi việc xảy ra tự nhiên"],
+  [56,"Có phải cách làm việc của bạn là","Mọi việc cần được giải quyết đúng hạn","Trì hoãn giải quyết công việc"],
+  [57,"Khi chuông điện thoại reo, bạn có","Trả lời điện thoại trước","Hy vọng ai đó sẽ trả lời"],
+  [58,"Điều gì có giá trị hơn? nếu có","Cảm nhận tốt về hiện thực","Trí tưởng tượng phong phú"],
+  [59,"Bạn có thiên hướng về","Sự kiện, dữ liệu","Suy luận"],
+  [60,"Khi đánh giá bạn thường","Trung lập","Độ lượng, khoan dung"],
+  [61,"Bạn có thấy mình thiên về bên nào hơn","Suy nghĩ rõ ràng, cẩn trọng","Có ý chí mạnh mẽ"],
+  [62,"Bạn có","Lập thời gian biểu cho các công việc","Việc gì đến thì làm"],
+  [63,"Bạn là người có thiên hướng nào nhiều hơn","Làm việc theo nền nếp hàng ngày","Tự do"],
+  [64,"Bạn là người","Dễ tiếp xúc, làm quen","Kín đáo"],
+  [65,"Bạn thấy vui sướng với","Những kinh nghiệm được người khác trao đổi","Những ý tưởng kỳ quặc"],
+  [66,"Khi viết, bạn thích","Sự rõ ràng, trong sáng","Những ý tưởng thông minh"],
+  [67,"Bạn thường","Không định kiến","Thương người"],
+  [68,"Bạn thực sự là người","Công minh hơn là nhân hậu","Nhân hậu hơn là công minh"],
+  [69,"Bạn là người","Hay đưa ra những đánh giá bất ngờ","Trì hoãn việc đánh giá"],
+  [70,"Bạn có xu hướng","Cẩn trọng, chín chắn hơn là tự do","Tự do hơn là cẩn trọng, chín chắn"],
+];
+
+// ====== GHÉP CẶP ======
+// Nhóm câu theo cột (đọc theo hàng: 1..7, 8..14, ...)
+function buildCols(){const c=[[],[],[],[],[],[],[]];for(let r=0;r<10;r++)for(let k=0;k<7;k++)c[k].push(r*7+k+1);return c;}
+const COLS = buildCols();
+// E/I=nhóm0 | S/N=nhóm2+3 | T/F=nhóm4+5 | J/P=nhóm1+6
+const PAIRS = [
+  {key:'EI',left:'E',right:'I',groups:[0],color:'var(--ei)'},
+  {key:'SN',left:'S',right:'N',groups:[2,3],color:'var(--sn)'},
+  {key:'TF',left:'T',right:'F',groups:[4,5],color:'var(--tf)'},
+  {key:'JP',left:'J',right:'P',groups:[1,6],color:'var(--jp)'},
+];
+// Map thang 1–5 -> [điểm a, điểm b]
+function mapAB(v){return {1:[5,0],2:[4,1],3:[3,2],4:[1,4],5:[0,5]}[v]||[0,0];}
+
+// ====== MÔ TẢ 16 LOẠI ======
+const TYPES = {
+ ISTJ:["Người trách nhiệm","Thực tế, đáng tin, coi trọng truyền thống và sự ngăn nắp. Bạn làm việc bền bỉ, giữ lời và hoàn thành mọi thứ đến nơi đến chốn."],
+ ISFJ:["Người che chở","Ân cần, tận tâm và chu đáo. Bạn âm thầm chăm lo cho người khác và ghi nhớ những điều nhỏ nhặt mà người ta cần."],
+ INFJ:["Người cố vấn","Sâu sắc, lý tưởng và giàu trực giác. Bạn nhìn thấy ý nghĩa ẩn sau sự việc và muốn giúp người khác trưởng thành."],
+ INTJ:["Nhà chiến lược","Độc lập, tư duy hệ thống và tầm nhìn dài hạn. Bạn lập kế hoạch sắc bén và theo đuổi mục tiêu một cách kiên định."],
+ ISTP:["Người thợ khéo","Điềm tĩnh, linh hoạt và giỏi xử lý vấn đề thực tế. Bạn học bằng tay, bằng thử nghiệm hơn là bằng lý thuyết."],
+ ISFP:["Người nghệ sĩ","Nhẹ nhàng, nhạy cảm và sống theo giá trị riêng. Bạn cảm nhận cái đẹp trong khoảnh khắc và thể hiện mình qua hành động hơn lời nói."],
+ INFP:["Người lý tưởng","Mơ mộng, chân thành và sâu nặng nội tâm. Bạn được dẫn dắt bởi niềm tin cá nhân và khao khát một thế giới tốt đẹp hơn."],
+ INTP:["Nhà tư duy","Tò mò, logic và mê khám phá ý tưởng. Bạn thích mổ xẻ vấn đề đến tận gốc và tìm ra nguyên lý vận hành."],
+ ESTP:["Người năng động","Quyết đoán, thực tế và thích hành động. Bạn sống trong hiện tại và ứng biến tài tình trước tình huống bất ngờ."],
+ ESFP:["Người trình diễn","Nồng nhiệt, vui tươi và yêu cuộc sống. Bạn mang năng lượng tích cực và khiến mọi người xung quanh thấy thoải mái."],
+ ENFP:["Người truyền cảm hứng","Hào hứng, sáng tạo và giàu khả năng kết nối. Bạn nhìn thấy tiềm năng ở mọi người và mọi ý tưởng mới."],
+ ENTP:["Người tranh luận","Nhanh trí, ham tranh biện và thích thử thách lối mòn. Bạn thấy khả năng ở khắp nơi và mê những cuộc đối thoại sắc sảo."],
+ ESTJ:["Người điều hành","Tổ chức tốt, thực tế và quyết đoán. Bạn giỏi đưa mọi thứ vào nề nếp và dẫn dắt nhóm đạt kết quả rõ ràng."],
+ ESFJ:["Người quan tâm","Thân thiện, tận tụy và coi trọng hòa khí. Bạn chăm lo cho cộng đồng và tạo cảm giác gắn kết quanh mình."],
+ ENFJ:["Người dẫn dắt","Ấm áp, có sức thuyết phục và quan tâm đến người khác. Bạn truyền động lực và giúp mọi người phát huy điều tốt nhất."],
+ ENTJ:["Nhà lãnh đạo","Tự tin, có tầm nhìn và giỏi tổ chức. Bạn vạch chiến lược, dẫn dắt và biến mục tiêu lớn thành hiện thực."],
+};
+
+// ====== STATE ======
+const answers = {};   // q -> 1..5
+
+// ====== RENDER QUESTIONS ======
+function renderQuestions(){
+  const list = document.getElementById('qlist');
+  let html = '';
+  QUESTIONS.forEach(q=>{
+    const [num,title,a,b]=q;
+    let dots='';
+    for(let v=1;v<=5;v++){
+      dots+=`<button class="dot" data-q="${num}" data-v="${v}" aria-label="Mức ${v}" onclick="pick(${num},${v},this)">${v}</button>`;
+    }
+    html+=`<div class="q" id="q${num}">
+      <div class="q-num">Câu ${num}</div>
+      <div class="q-title">${title}</div>
+      <div class="scale">
+        <div class="pole left">${a}</div>
+        <div class="dots">${dots}</div>
+        <div class="pole right">${b}</div>
+      </div>
+    </div>`;
+  });
+  list.innerHTML=html;
+}
+
+function startQuiz(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('progressBar').style.display='block';
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function pick(q,v,el){
+  answers[q]=v;
+  // update visual
+  document.querySelectorAll(`.dot[data-q="${q}"]`).forEach(d=>d.classList.remove('sel'));
+  el.classList.add('sel');
+  updateProgress();
+  // auto-scroll to next unanswered (gentle)
+  const next=document.getElementById('q'+(q+1));
+  if(next && Object.keys(answers).length<70){
+    setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'center'}),180);
+  }
+}
+
+function updateProgress(){
+  const n=Object.keys(answers).length;
+  document.getElementById('done').textContent=n;
+  document.getElementById('fill').style.width=(n/70*100)+'%';
+  const zone=document.getElementById('submitZone');
+  if(n>=1) zone.classList.add('show');
+  const btn=document.getElementById('submitBtn');
+  const warn=document.getElementById('warn');
+  if(n<70){
+    btn.disabled=true;
+    warn.textContent=`Còn ${70-n} câu chưa trả lời`;
+  }else{
+    btn.disabled=false;
+    warn.textContent='';
+  }
+}
+
+// ====== TÍNH KẾT QUẢ ======
+function computeResult(){
+  // điểm a/b theo nhóm
+  const sumA=[0,0,0,0,0,0,0], sumB=[0,0,0,0,0,0,0];
+  for(let k=0;k<7;k++){
+    COLS[k].forEach(q=>{
+      const [a,b]=mapAB(answers[q]);
+      sumA[k]+=a; sumB[k]+=b;
+    });
+  }
+  const dims=[];
+  let type='';
+  PAIRS.forEach(p=>{
+    let a=0,b=0;
+    p.groups.forEach(g=>{a+=sumA[g];b+=sumB[g];});
+    const total=a+b;
+    const sign=(a>=b)?p.left:p.right;
+    type+=sign;
+    dims.push({...p,a,b,total,sign,
+      pctLeft: total? Math.round(a/total*100):50});
+  });
+  return {type,dims};
+}
+
+// ====== HIỂN THỊ KẾT QUẢ ======
+function finish(){
+  if(Object.keys(answers).length<70) return;
+  const {type,dims}=computeResult();
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('progressBar').style.display='none';
+  const res=document.getElementById('result');
+  res.style.display='block';
+
+  document.getElementById('rType').textContent=type;
+  const info=TYPES[type]||["",""];
+  document.getElementById('rName').textContent='“'+info[0]+'”';
+  document.getElementById('rDesc').textContent=info[1];
+
+  // thanh 4 chiều
+  const labels={EI:['Hướng ngoại (E)','Hướng nội (I)'],
+    SN:['Giác quan (S)','Trực giác (N)'],
+    TF:['Lý trí (T)','Cảm xúc (F)'],
+    JP:['Nguyên tắc (J)','Linh hoạt (P)']};
+  let dh='';
+  dims.forEach(d=>{
+    const [L,R]=labels[d.key];
+    const leftWins=d.a>=d.b;
+    dh+=`<div class="dim">
+      <div class="dim-head">
+        <span class="${leftWins?'picked':''}">${L}</span>
+        <span class="${!leftWins?'picked':''}">${R}</span>
+      </div>
+      <div class="dim-track">
+        <div class="dim-left" style="width:${d.pctLeft}%;background:${d.color}">${d.pctLeft>14?d.a:''}</div>
+        <div class="dim-right" style="width:${100-d.pctLeft}%">${(100-d.pctLeft)>14?d.b:''}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('dims').innerHTML=dh;
+
+  saveResult(type,dims);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyResult(){
+  const {type}=computeResult();
+  const info=TYPES[type]||["",""];
+  const txt=`Khuynh hướng tính cách của tôi: ${type} — ${info[0]}. ${info[1]}`;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.getElementById('copyBtn');
+    const o=b.textContent;b.textContent='Đã sao chép ✓';
+    setTimeout(()=>b.textContent=o,1800);
+  });
+}
+
+// ====== LƯU KẾT QUẢ (tùy chọn gửi về server/Sheet) ======
+function saveResult(type,dims){
+  const note=document.getElementById('saveNote');
+  // Nếu có cấu hình WEBHOOK_URL -> gửi dữ liệu về để ghi nhận
+  if(typeof WEBHOOK_URL!=='undefined' && WEBHOOK_URL){
+    const payload={
+      type, ts:new Date().toISOString(),
+      answers, dims:dims.map(d=>({k:d.key,a:d.a,b:d.b,sign:d.sign}))
+    };
+    fetch(WEBHOOK_URL,{method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)})
+      .then(()=>{note.textContent='Kết quả đã được ghi nhận.';})
+      .catch(()=>{note.textContent='';});
+  }else{
+    note.textContent='';
+  }
+}
+
+// init
+renderQuestions();
+</script>
+</body>
+</html>
